@@ -6,10 +6,10 @@ class Snake():
         super().__init__()
         self.snake_body = [
             [100, 150],
-            [110, 160],
-            [120, 170],
-            [130, 180],
-            [140, 190],
+            [110, 150],
+            [120, 150],
+            [130, 150],
+            [140, 150],
         ]
         self.speedX = 10
         self.speedY = 0
@@ -43,6 +43,15 @@ class Snake():
         self.speedX = -10
         self.speedY = 0
         self.direction = "left"
+
+    def snake_collided(self):
+        if (self.snake_body[len(self.snake_body)-1][0] <= 5 or
+                self.snake_body[len(self.snake_body)-1][0] >= 495 or
+                self.snake_body[len(self.snake_body)-1][1] <= 5 or
+                self.snake_body[len(self.snake_body)-1][1] >= 495):
+            return True
+        # for point in self.snake_body()
+        # if self.snake_body[len(self.snake_body)-1][0] ==
 
     def updateSnake(self):
         self.draw_snake()
@@ -88,10 +97,7 @@ while True:
         screen.fill("black")
         snake.updateSnake()
 
-        if (snake.snake_body[len(snake.snake_body)-1][0] <= 5 or
-            snake.snake_body[len(snake.snake_body)-1][0] >= 495 or
-            snake.snake_body[len(snake.snake_body)-1][1] <= 5 or
-                snake.snake_body[len(snake.snake_body)-1][1] >= 495):
+        if snake.snake_collided():
             game_active = False
     else:
         screen.fill("black")
