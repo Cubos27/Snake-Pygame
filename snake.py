@@ -2,7 +2,7 @@ import random
 import pygame
 
 
-class Snake():
+class Snake:
     def __init__(self):
         super().__init__()
         self.snake_body = [
@@ -12,18 +12,22 @@ class Snake():
             [130, 150],
             [140, 150],
         ]
-        self.speedX = 7
+        self.speedX = 10
         self.speedY = 0
         self.direction = "right"
 
     def draw_snake(self):
         for point in self.snake_body:
-            pygame.draw.circle(screen, "green", (point), 7)
+            pygame.draw.circle(screen, "green", (point), 10)
 
     def snake_movement(self):
         self.snake_body.pop(0)
-        self.snake_body.append([self.snake_body[len(self.snake_body)-1][0] + self.speedX,
-                               self.snake_body[len(self.snake_body)-1][1] + self.speedY])
+        self.snake_body.append(
+            [
+                self.snake_body[len(self.snake_body) - 1][0] + self.speedX,
+                self.snake_body[len(self.snake_body) - 1][1] + self.speedY,
+            ]
+        )
 
     def move_down(self):
         self.speedX = 0
@@ -46,37 +50,49 @@ class Snake():
         self.direction = "left"
 
     def snake_collided(self):
-        if (self.snake_body[len(self.snake_body)-1][0] <= 5 or
-                self.snake_body[len(self.snake_body)-1][0] >= 495 or
-                self.snake_body[len(self.snake_body)-1][1] <= 5 or
-                self.snake_body[len(self.snake_body)-1][1] >= 495):
+        if (
+            self.snake_body[len(self.snake_body) - 1][0] <= 5
+            or self.snake_body[len(self.snake_body) - 1][0] >= 495
+            or self.snake_body[len(self.snake_body) - 1][1] <= 5
+            or self.snake_body[len(self.snake_body) - 1][1] >= 495
+        ):
             return True
-        for i in range(1, len(self.snake_body)-2):
-            if (self.snake_body[len(self.snake_body)-1][0] == self.snake_body[i][0] and
-                    self.snake_body[len(self.snake_body)-1][1] == self.snake_body[i][1]):
+        for i in range(1, len(self.snake_body) - 2):
+            if (
+                self.snake_body[len(self.snake_body) - 1][0] == self.snake_body[i][0]
+                and self.snake_body[len(self.snake_body) - 1][1]
+                == self.snake_body[i][1]
+            ):
                 return True
 
     def updateSnake(self):
-        self.draw_snake()
         self.snake_movement()
+        self.draw_snake()
 
 
-class Fruit():
+class Fruit:
     def __init__(self):
         super().__init__()
-        self.posx = random.randint(0, 495)
-        self.posy = random.randint(0, 495)
+        self.posx = random.randint(1, 99) * 5
+        self.posy = random.randint(1, 99) * 5
+        print("Fruit position:", self.posx, self.posy)
 
     def draw_fruit(self):
-        pygame.draw.circle(screen, "Red", (self.posx, self.posy), 7)
+        pygame.draw.circle(screen, "Red", (self.posx, self.posy), 10)
 
     def collision_snake_fruit(self):
-        if (snake.snake_body[len(snake.snake_body)-1][0] <= self.posx+10 and
-                snake.snake_body[len(snake.snake_body)-1][0] >= self.posx-10 and
-                snake.snake_body[len(snake.snake_body)-1][1] <= self.posy+10 and
-                snake.snake_body[len(snake.snake_body)-1][1] >= self.posy-10):
-            snake.snake_body.append([snake.snake_body[len(snake.snake_body)-1][0],
-                                    snake.snake_body[len(snake.snake_body)-1][1]])
+        if (
+            snake.snake_body[len(snake.snake_body) - 1][0] <= self.posx + 10
+            and snake.snake_body[len(snake.snake_body) - 1][0] >= self.posx - 10
+            and snake.snake_body[len(snake.snake_body) - 1][1] <= self.posy + 10
+            and snake.snake_body[len(snake.snake_body) - 1][1] >= self.posy - 10
+        ):
+            snake.snake_body.append(
+                [
+                    snake.snake_body[len(snake.snake_body) - 1][0],
+                    snake.snake_body[len(snake.snake_body) - 1][1],
+                ]
+            )
             return True
 
 
@@ -85,11 +101,11 @@ pygame.init()
 screen = pygame.display.set_mode((500, 500))
 clock = pygame.time.Clock()
 
-pixel_font = pygame.font.Font('fonts/Pixeltype.ttf', 50)
-title_surf = pixel_font.render('Snake Game', False, "White")
+pixel_font = pygame.font.Font("fonts/Pixeltype.ttf", 50)
+title_surf = pixel_font.render("Snake Game", False, "White")
 title_rect = title_surf.get_rect(center=(250, 80))
 
-instruction_surf = pixel_font.render('Press any key to start', False, "White")
+instruction_surf = pixel_font.render("Press any key to start", False, "White")
 instruction_rect = instruction_surf.get_rect(center=(250, 420))
 
 game_active = False
@@ -112,7 +128,9 @@ while True:
                     snake.move_up()
                 if event.key == pygame.K_RIGHT and snake.direction != "left":
                     snake.move_right()
-                if event.key == pygame.K_LEFT and snake.direction != "right":  # me la pelas
+                if (
+                    event.key == pygame.K_LEFT and snake.direction != "right"
+                ):  # me la pelas
                     snake.move_left()
         else:
             if event.type == pygame.KEYDOWN:
@@ -145,6 +163,10 @@ while True:
         screen.fill("black")
         screen.blit(instruction_surf, instruction_rect)
         screen.blit(title_surf, title_rect)
+    pygame.draw.line(screen, "White", (0, 0), (0, 500), 5)
+    pygame.draw.line(screen, "white", (0, 0), (500, 0), 5)
+    pygame.draw.line(screen, "white", (500, 0), (500, 500), 5)
+    pygame.draw.line(screen, "white", (0, 500), (500, 500), 5)
 
     pygame.display.flip()
     clock.tick(15)
